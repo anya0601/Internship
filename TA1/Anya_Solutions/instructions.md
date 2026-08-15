@@ -5,9 +5,17 @@
 2. Find the median of a list of numbers. [X]
     -How to find the middle position of list.
     -How to check if the list length is odd or even.What to do if it is even?
+    ```
+   >>> import math     
+   >>> math.floor(7/2),math.ceil(7/2)
+   (3, 4)
+   >>> math.floor(7/2),math.ceil(7/2)
+    ```
+
 3. Count words longer than N letters in a sentence. [X]
    - How to find the word lengths in a sentence?
    - How filter the above based on the "length" criteria.
+> [Ref. Problem 10 and write a solution]
 
 4. Swap two variables without using a temporary variable. [X]
 ```
@@ -46,11 +54,14 @@ first =  first - second # first = 28 - 12 = 16
 6. Find the common elements between two lists. [X]
     -In mathematics it is done by intersection of sets does that apply here or is there another method?
 
-~~7. Convert a list of (key, value) tuples into a dictionary. [ ]~~
+7. Convert a list of (key, value) tuples into a dictionary. [ ]
+> dict(mapping) -> new dictionary initialized from a mapping object's (key, value) pairs
 
 8. Compute the running/cumulative sum of a list of numbers. [X]
-   -How to find the sum of the number?
-   -Should we use loops?
+   - How to find the sum of the number? # sum()
+   - Should we use loops? # We can use for loop as well. Write a solution for that.
+   - > read about [`itertools`](https://docs.python.org/3/library/itertools.html)
+   - > Always check the documentations to understand about the input, argument, operand and return types.
 
 ~~9. Check if a string has balanced parentheses. [ ]~~
 
