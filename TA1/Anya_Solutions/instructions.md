@@ -1,6 +1,10 @@
 
 1. Check if a string contains only digits. [X]
+   -How to check if a single element is a digit?
+   -How to check that?Using loop or any other way?
 2. Find the median of a list of numbers. [X]
+    -How to find the middle position of list.
+    -How to check if the list length is odd or even.What to do if it is even?
 3. Count words longer than N letters in a sentence. [X]
    - How to find the word lengths in a sentence?
    - How filter the above based on the "length" criteria.
@@ -37,13 +41,19 @@ first =  first - second # first = 28 - 12 = 16
 
 
 5. Check if a given year is a leap year. [X]
+   -How to check if the given year is divisible by 4.
 
 6. Find the common elements between two lists. [X]
+    -In mathematics it is done by intersection of sets does that apply here or is there another method?
 
 ~~7. Convert a list of (key, value) tuples into a dictionary. [ ]~~
 
 8. Compute the running/cumulative sum of a list of numbers. [X]
+   -How to find the sum of the number?
+   -Should we use loops?
 
 ~~9. Check if a string has balanced parentheses. [ ]~~
 
 10. Find the most frequently occurring character in a string. [X]
+    -How to count the number of times the characters are appearing.
+    -How to check which character has the higgest count.
