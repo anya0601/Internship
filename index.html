@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Progress & Architecture Report | Ananya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0f1c;
+            --bg-card: #111827;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.025em;
+        }
+
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+        /* Background Grid Effect */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, transparent, black, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Code Block Styling */
+        .code-window {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+        }
+        .code-header {
+            background-color: #161b22;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #30363d;
+            font-size: 0.875rem;
+            color: #8b949e;
+        }
+        .code-dots {
+            display: flex;
+            gap: 6px;
+            margin-right: 15px;
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+        
+        pre { padding: 1.5rem; overflow-x: auto; font-size: 0.9rem; line-height: 1.5; color: #e6edf3; }
+        .syntax-keyword { color: #ff7b72; }
+        .syntax-func { color: #d2a8ff; }
+        .syntax-string { color: #a5d6ff; }
+        .syntax-comment { color: #8b949e; font-style: italic; }
+        .syntax-operator { color: #79c0ff; }
+        .syntax-builtin { color: #79c0ff; }
+
+        /* Timeline */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--accent-primary), var(--accent-secondary), transparent);
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <div class="fixed inset-0 z-[-1] bg-grid opacity-30 pointer-events-none"></div>
+    <div class="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[120px] z-[-1] pointer-events-none"></div>
+    <div class="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px] z-[-1] pointer-events-none"></div>
+
+    <nav class="fixed w-full z-50 glass-card rounded-none border-t-0 border-x-0 border-b border-white/10 top-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-bold text-xl tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-terminal text-blue-500"></i> Ananya.Dev
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
+                <a href="#methodology" class="hover:text-white transition-colors">Methodology</a>
+                <a href="#python-basics" class="hover:text-white transition-colors">Python Core</a>
+                <a href="#git-architecture" class="hover:text-white transition-colors">Git Architecture</a>
+                <a href="#pandas-init" class="hover:text-white transition-colors">Pandas I/O</a>
+            </div>
+            <a href="https://github.com/anya0601/Internship" target="_blank" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium transition-all border border-white/10 flex items-center gap-2">
+                <i class="fa-brands fa-github"></i> View Repository
+            </a>
+        </div>
+    </nav>
+
+    <main class="pt-24 px-6 max-w-7xl mx-auto">
+
+        <section id="hero" class="min-h-[85vh] flex flex-col justify-center items-center text-center relative reveal">
+            <div class="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-semibold text-sm mb-6">
+                <i class="fa-solid fa-microchip mr-2"></i> Internship Progress Report
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
+                Building Systems,<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Not Just Scripts.</span>
+            </h1>
+            <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+                A comprehensive technical deep-dive into Day 1-3 progress. Covering manual algorithmic problem solving, Python memory mechanics, source control architecture, and foundational data wrangling.
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="#python-basics" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-medium transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                    Explore Technical Pipeline
+                </a>
+                <a href="#git-architecture" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-3 rounded-full font-medium transition-all">
+                    Review Git Workflow
+                </a>
+            </div>
+        </section>
+
+        <section id="methodology" class="py-20 reveal">
+            <div class="glass-card p-10 md:p-14 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10 text-8xl text-blue-500 pointer-events-none">
+                    <i class="fa-solid fa-fingerprint"></i>
+                </div>
+                <h2 class="text-3xl font-bold mb-4">Pedagogical Approach: Defending the Code</h2>
+                <p class="text-gray-400 text-lg mb-8 max-w-4xl">
+                    To ensure robust foundational knowledge, I strictly adhered to a manual execution strategy. Reliance on automated code generators (AI) bypasses the crucial phase of cognitive struggle required to understand memory management and time complexity.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-black/30 border border-white/5 p-6 rounded-xl hover:border-blue-500/30 transition-colors">
+                        <i class="fa-solid fa-book-open text-blue-400 text-2xl mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-2">Primary Sourcing</h3>
+                        <p class="text-sm text-gray-400">Exclusively utilized authoritative documentation (<code>docs.python.org</code>, <code>pandas.pydata.org</code>). Avoided stack-overflow copy-pasting to understand the core arguments of built-in functions.</p>
+                    </div>
+                    <div class="bg-black/30 border border-white/5 p-6 rounded-xl hover:border-purple-500/30 transition-colors">
+                        <i class="fa-solid fa-pen-ruler text-purple-400 text-2xl mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-2">Algorithmic Pseudocode</h3>
+                        <p class="text-sm text-gray-400">Before implementing syntax, logical flows (like nested loops or stack-based parsers) were drafted manually. This ensured edge cases were accounted for prior to execution.</p>
+                    </div>
+                    <div class="bg-black/30 border border-white/5 p-6 rounded-xl hover:border-green-500/30 transition-colors">
+                        <i class="fa-solid fa-bug text-green-400 text-2xl mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-2">Traceback Analysis</h3>
+                        <p class="text-sm text-gray-400">Developed proficiency in reading raw Traceback logs. Instead of querying errors externally, I learned to isolate the exact line number and data state causing `IndexError` or `TypeError`.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="relative py-10">
+            <div class="timeline-line hidden md:block"></div>
+
+            <section id="python-basics" class="py-16 relative reveal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+                    <div class="md:pr-10">
+                        <div class="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 font-semibold text-xs mb-4 uppercase tracking-wider border border-blue-500/30">Phase 1: Days 1-2</div>
+                        <h2 class="text-4xl font-bold mb-6">Core Python Mechanics & Data Structures</h2>
+                        <div class="space-y-6 text-gray-300">
+                            <p>
+                                The objective was not merely to write functional scripts, but to write <em>optimized</em> and <em>mathematically sound</em> scripts. I completed all 10 assigned algorithms, focusing heavily on memory constraints, data types, and time complexity (Big O notation).
+                            </p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-check text-green-400 mt-1 mr-3"></i>
+                                    <div>
+                                        <strong class="text-white block">Memory-Safe Variable Swapping</strong>
+                                        Instead of using a temporary variable which allocates additional memory, I utilized Python's tuple packing/unpacking mechanism <code>a, b = b, a</code>, understanding how the right side is evaluated completely in memory before assignment.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-check text-green-400 mt-1 mr-3"></i>
+                                    <div>
+                                        <strong class="text-white block">Complexity Optimization (Set Theory)</strong>
+                                        For the "Common Elements in Two Lists" exercise, an initial nested loop yielded an unacceptable <code>O(N*M)</code> time complexity. By converting the lookup list into a Python <code>set</code> (hash table), I reduced lookup time to <code>O(1)</code>, optimizing the entire function to <code>O(N+M)</code>.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-check text-green-400 mt-1 mr-3"></i>
+                                    <div>
+                                        <strong class="text-white block">LIFO Stack Implementation</strong>
+                                        To check for balanced parentheses, I avoided complex regex. Instead, I implemented a Stack data structure using a standard Python list, appending open brackets and popping them when a matching closing bracket appeared, effectively handling nested structures.
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="relative reveal delay-200">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur opacity-25"></div>
+                        <div class="code-window relative">
+                            <div class="code-header">
+                                <div class="code-dots">
+                                    <div class="dot dot-red"></div>
+                                    <div class="dot dot-yellow"></div>
+                                    <div class="dot dot-green"></div>
+                                </div>
+                                <span>parenthesis_validator.py</span>
+                            </div>
+<pre><code><span class="syntax-keyword">def</span> <span class="syntax-func">is_balanced</span>(string):
+    <span class="syntax-comment"># Mapping closing to opening brackets for O(1) lookup</span>
+    matching_bracket = {<span class="syntax-string">')'</span>: <span class="syntax-string">'('</span>, <span class="syntax-string">'}'</span>: <span class="syntax-string">'{'</span>, <span class="syntax-string">']'</span>: <span class="syntax-string">'['</span>}
+    stack = []
+
+    <span class="syntax-keyword">for</span> char <span class="syntax-keyword">in</span> string:
+        <span class="syntax-keyword">if</span> char <span class="syntax-keyword">in</span> matching_bracket.values():
+            <span class="syntax-comment"># It's an opening bracket, push to stack (LIFO)</span>
+            stack.append(char)
+        <span class="syntax-keyword">elif</span> char <span class="syntax-keyword">in</span> matching_bracket.keys():
+            <span class="syntax-comment"># It's a closing bracket. Check for validity.</span>
+            <span class="syntax-keyword">if</span> <span class="syntax-keyword">not</span> stack <span class="syntax-keyword">or</span> stack.pop() != matching_bracket[char]:
+                <span class="syntax-keyword">return False</span> <span class="syntax-comment"># Stack empty or mismatch</span>
+
+    <span class="syntax-comment"># Valid if stack is completely empty at the end</span>
+    <span class="syntax-keyword">return</span> len(stack) == <span class="syntax-builtin">0</span>
+
+<span class="syntax-comment"># Edge case testing</span>
+<span class="syntax-builtin">print</span>(is_balanced(<span class="syntax-string">"{[()]}"</span>))  <span class="syntax-comment"># True</span>
+<span class="syntax-builtin">print</span>(is_balanced(<span class="syntax-string">"{[(])}"</span>))  <span class="syntax-comment"># False</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start mt-12 flex-row-reverse md:flex-row">
+                     <div class="order-2 md:order-1 relative reveal delay-300">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl blur opacity-20"></div>
+                        <div class="code-window relative h-full">
+                            <div class="code-header">
+                                <div class="code-dots">
+                                    <div class="dot dot-red"></div>
+                                    <div class="dot dot-yellow"></div>
+                                    <div class="dot dot-green"></div>
+                                </div>
+                                <span>algorithmic_solutions.py</span>
+                            </div>
+<pre><code><span class="syntax-comment"># Ex 2: Finding Median with List Sorting Mechanics</span>
+<span class="syntax-keyword">def</span> <span class="syntax-func">find_median</span>(numbers):
+    <span class="syntax-keyword">if not</span> numbers: <span class="syntax-keyword">return None</span>
+    
+    <span class="syntax-comment"># Utilizing Timsort (O(N log N))</span>
+    sorted_nums = sorted(numbers) 
+    n = len(sorted_nums)
+    mid = n // <span class="syntax-builtin">2</span>
+    
+    <span class="syntax-comment"># Handling even vs odd length arrays</span>
+    <span class="syntax-keyword">if</span> n % <span class="syntax-builtin">2</span> == <span class="syntax-builtin">0</span>:
+        <span class="syntax-keyword">return</span> (sorted_nums[mid - <span class="syntax-builtin">1</span>] + sorted_nums[mid]) / <span class="syntax-builtin">2.0</span>
+    <span class="syntax-keyword">return</span> float(sorted_nums[mid])
+
+<span class="syntax-comment"># Ex 8: Cumulative Sum via State Tracking</span>
+<span class="syntax-keyword">def</span> <span class="syntax-func">cumulative_sum</span>(numbers):
+    <span class="syntax-comment"># O(N) Time, O(N) Space approach</span>
+    result = []
+    current_sum = <span class="syntax-builtin">0</span>
+    <span class="syntax-keyword">for</span> num <span class="syntax-keyword">in</span> numbers:
+        current_sum += num  <span class="syntax-comment"># Track state to avoid nested loop O(N^2)</span>
+        result.append(current_sum)
+    <span class="syntax-keyword">return</span> result
+
+<span class="syntax-comment"># Ex 10: Frequency Analysis using Dictionary Hashing</span>
+<span class="syntax-keyword">def</span> <span class="syntax-func">most_frequent_char</span>(s):
+    char_count = {}
+    <span class="syntax-comment"># O(N) generation of hash map</span>
+    <span class="syntax-keyword">for</span> char <span class="syntax-keyword">in</span> s:
+        <span class="syntax-keyword">if</span> char.isalnum(): <span class="syntax-comment"># Filter out whitespace/punctuation</span>
+            char_count[char] = char_count.get(char, <span class="syntax-builtin">0</span>) + <span class="syntax-builtin">1</span>
+            
+    <span class="syntax-keyword">if not</span> char_count: <span class="syntax-keyword">return None</span>
+    
+    <span class="syntax-comment"># Using max() with a custom key function</span>
+    <span class="syntax-keyword">return</span> max(char_count, key=char_count.get)
+</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="order-1 md:order-2 md:pl-10 reveal delay-100">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-400"><i class="fa-solid fa-microscope mr-2"></i>Deep Dive: Algorithmic Defense</h3>
+                        <p class="text-gray-400 mb-6">A closer look at specific logic challenges proves an understanding of underlying mechanics rather than surface-level syntax execution.</p>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-black/40 border border-white/5 p-5 rounded-lg hover:border-blue-500/20 transition-all">
+                                <h4 class="text-white font-semibold mb-2">1. The Median Problem & Sorting</h4>
+                                <p class="text-sm text-gray-400">Before extracting the median, the array must be sorted. I utilized Python's built-in <code>sorted()</code> function, researching that it uses <strong>Timsort</strong> (a hybrid sorting algorithm) yielding an $O(N \log N)$ time complexity. The logic heavily relied on integer division <code>//</code> to correctly index the array based on whether its length was even or odd.</p>
+                            </div>
+
+                            <div class="bg-black/40 border border-white/5 p-5 rounded-lg hover:border-blue-500/20 transition-all">
+                                <h4 class="text-white font-semibold mb-2">2. Running Sums & State Tracking</h4>
+                                <p class="text-sm text-gray-400">A naive approach to cumulative sums involves a nested loop to re-add previous elements $O(N^2)$. I avoided this by maintaining a <code>current_sum</code> state variable outside the loop. This allowed a single pass through the array, modifying the state and appending to the results array, achieving an optimal $O(N)$ time complexity.</p>
+                            </div>
+
+                            <div class="bg-black/40 border border-white/5 p-5 rounded-lg hover:border-blue-500/20 transition-all">
+                                <h4 class="text-white font-semibold mb-2">3. Frequency Counters & Hash Maps</h4>
+                                <p class="text-sm text-gray-400">To find the most frequent character, relying on the <code>.count()</code> string method inside a loop would cause repeated string parsing. Instead, I populated a dictionary (hash map) to count occurrences in a single pass $O(N)$. I then learned to utilize the <code>key</code> argument in Python's <code>max()</code> function to return the dictionary key associated with the highest value.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="git-architecture" class="py-16 relative reveal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center flex-row-reverse md:flex-row">
+                    <div class="order-2 md:order-1 relative reveal delay-200">
+                        <div class="glass-card p-6 border-l-4 border-l-orange-500">
+                            <h4 class="text-orange-400 font-mono text-sm mb-2"><i class="fa-solid fa-code-branch mr-2"></i>Under The Hood: VS Code Git Extension</h4>
+                            <p class="text-gray-300 text-sm mb-4">While utilizing the graphical UI for speed, I ensured I understood the underlying CLI commands being abstracted:</p>
+                            <div class="bg-black/50 p-4 rounded font-mono text-xs text-gray-400 space-y-2">
+                                <div><span class="text-green-400">1. Clicking '+' (Stage Changes):</span><br><code>$ git add &lt;filename&gt;</code></div>
+                                <div><span class="text-blue-400">2. Typing message & 'Commit':</span><br><code>$ git commit -m "feat: updated logic"</code></div>
+                                <div><span class="text-purple-400">3. Clicking 'Sync Changes':</span><br><code>$ git pull --rebase && git push origin main</code></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-1 md:order-2 md:pl-10">
+                        <div class="inline-block px-3 py-1 rounded-full bg-orange-500/20 text-orange-300 font-semibold text-xs mb-4 uppercase tracking-wider border border-orange-500/30">Strategic Deviation</div>
+                        <h2 class="text-4xl font-bold mb-6">Implementing CI/CD Foundations</h2>
+                        <div class="space-y-6 text-gray-300">
+                            <p>
+                                Although version control was not strictly scheduled until the final merge phase (Day 7), I proactively established a Git repository using the VS Code Git extension from Day 1.
+                            </p>
+                            <p>
+                                <strong>Why this matters:</strong> Data scraping and cleaning scripts are highly prone to breaking when logic is tweaked. By maintaining localized commits, I established a fail-safe environment. If a new Pandas transformation corrupted my dataframe, I could instantly <code>git restore</code> to the last known working state rather than manually rewriting code.
+                            </p>
+                            <p>
+                                Furthermore, this prepares my codebase for a seamless, conflict-free merge with my teammate (Pavanaj) at the conclusion of the project.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pandas-init" class="py-16 relative reveal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="md:pr-10">
+                        <div class="inline-block px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-semibold text-xs mb-4 uppercase tracking-wider border border-purple-500/30">Phase 2: Day 3</div>
+                        <h2 class="text-4xl font-bold mb-6">Data Wrangling: Enter Pandas</h2>
+                        <div class="space-y-6 text-gray-300">
+                            <p>
+                                Before adopting the <code>pandas</code> library, I utilized Python's native <code>csv</code> module. This manual parsing exercise highlighted the inefficiencies of row-by-row data manipulation, perfectly setting the stage for Pandas' vectorized operations.
+                            </p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-layer-group text-purple-400 mt-1 mr-3"></i>
+                                    <div>
+                                        <strong class="text-white block">Systematic Ingestion & Inspection</strong>
+                                        Utilized <code>pd.read_csv()</code> to load raw Kaggle datasets into memory. Immediately applied <code>df.info()</code> and <code>df.isna().sum()</code> to build a topological map of missing values before attempting any modifications.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-broom text-purple-400 mt-1 mr-3"></i>
+                                    <div>
+                                        <strong class="text-white block">Targeted Null Handling</strong>
+                                        Recognized that blanket dropping (<code>dropna()</code>) causes severe data loss. Implemented conditional cleaning: dropping rows missing critical identifiers, but utilizing <code>fillna()</code> with statistical means for missing quantitative data.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-triangle-exclamation text-yellow-400 mt-1 mr-3"></i>
+                                    <div>
+                                        <strong class="text-white block">Resolving Memory Warnings</strong>
+                                        Encountered the <code>SettingWithCopyWarning</code>. By researching the documentation, I learned the critical difference between modifying a memory "view" versus a "copy". I resolved this by enforcing explicit indexing using <code>.loc[]</code> for direct assignment.
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="relative reveal delay-200">
+                         <div class="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl blur opacity-25"></div>
+                        <div class="code-window relative">
+                            <div class="code-header">
+                                <div class="code-dots">
+                                    <div class="dot dot-red"></div>
+                                    <div class="dot dot-yellow"></div>
+                                    <div class="dot dot-green"></div>
+                                </div>
+                                <span>data_cleaning_pipeline.py</span>
+                            </div>
+<pre><code><span class="syntax-keyword">import</span> pandas <span class="syntax-keyword">as</span> pd
+<span class="syntax-keyword">import</span> numpy <span class="syntax-keyword">as</span> np
+
+<span class="syntax-comment"># 1. Memory-efficient load</span>
+df = pd.read_csv(<span class="syntax-string">'raw_inventory.csv'</span>)
+
+<span class="syntax-comment"># 2. Debugging SettingWithCopyWarning</span>
+<span class="syntax-comment"># FAILED APPROACH (Creates an ambiguous memory slice):</span>
+<span class="syntax-comment"># df[df['price'] > 100]['category'] = 'Premium'</span>
+
+<span class="syntax-comment"># CORRECTED APPROACH (Explicit assignment using .loc):</span>
+df.loc[df[<span class="syntax-string">'price'</span>] > <span class="syntax-builtin">100</span>, <span class="syntax-string">'category'</span>] = <span class="syntax-string">'Premium'</span>
+
+<span class="syntax-comment"># 3. Vectorized Text Standardization (No loops required)</span>
+df[<span class="syntax-string">'title'</span>] = df[<span class="syntax-string">'title'</span>].str.strip().str.title()
+
+<span class="syntax-comment"># 4. Exporting pipeline</span>
+df.to_csv(<span class="syntax-string">'cleaned_inventory.csv'</span>, index=<span class="syntax-keyword">False</span>)
+<span class="syntax-builtin">print</span>(<span class="syntax-string">"Pipeline execution completed. Schema validated."</span>)
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="py-20 text-center reveal">
+            <div class="glass-card p-12 max-w-4xl mx-auto border-t-4 border-blue-500">
+                <i class="fa-solid fa-route text-4xl text-blue-500 mb-6"></i>
+                <h2 class="text-3xl font-bold mb-4">Next Phase Readiness: Web Scraping</h2>
+                <p class="text-gray-400 text-lg mb-8">
+                    The foundational architecture is secure. With Python data structures mastered, memory management understood, and Git source control active, I am fully equipped to begin Day 5-6 objectives: Utilizing <code>requests</code> and <code>BeautifulSoup</code> to programmatically extract and parse the static HTML DOM of <code>books.toscrape.com</code>.
+                </p>
+                <div class="flex justify-center gap-4">
+                    <span class="px-4 py-2 bg-blue-500/10 text-blue-400 rounded-full text-sm font-mono border border-blue-500/20">import requests</span>
+                    <span class="px-4 py-2 bg-purple-500/10 text-purple-400 rounded-full text-sm font-mono border border-purple-500/20">from bs4 import BeautifulSoup</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-white/10 mt-10 py-8 text-center text-gray-500 text-sm">
+        <p>Internship Progress Documentation &bull; Engineered by Ananya</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-black/80', 'backdrop-blur-md', 'shadow-lg');
+                } else {
+                    navbar.classList.remove('bg-black/80', 'backdrop-blur-md', 'shadow-lg');
+                }
+            });
+
+            // Reveal Elements on Scroll
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: stop observing once revealed
+                        // observer.unobserve(entry.target); 
+                    }
+                });
+            };
+
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver(revealCallback, revealOptions);
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+
+            // Trigger immediately for elements already in view on load
+            setTimeout(() => {
+                revealElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if(rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
