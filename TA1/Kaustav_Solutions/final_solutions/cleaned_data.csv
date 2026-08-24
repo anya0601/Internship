@@ -1,0 +1,5 @@
+date,product_id,item_name,price
+2023-01-01,101,new phone,20.5
+2023-01-02,102,old laptop,15.0
+2023-01-03,103,tablet,0.0
+,104,charger,12.99
