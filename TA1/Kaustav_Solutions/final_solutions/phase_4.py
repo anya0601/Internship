@@ -18,7 +18,7 @@ def scrape_books_under_20():
         for book in books:
             # 1. Filter by price on the main card
             price_text = book.find('p', class_='price_color').text
-            price_val = float(price_text.replace('£', ''))
+            price_val = str(price_text.replace('£', ''))
             
             if price_val < 20.0:
                 # 2. Get basic info
